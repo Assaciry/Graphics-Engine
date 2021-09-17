@@ -56,6 +56,14 @@ bool Screen::Initialize()
 		return false;
 	}
 
+	// Load all the Extension functionality
+	if(!gladLoadGL())
+	{
+		std::cout << "Error loading extensions." << std::endl;
+		return false;
+	}
+
+
 	return true;
 }
 

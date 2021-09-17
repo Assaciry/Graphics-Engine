@@ -3,47 +3,75 @@
 
 bool isAppRunning = true;
 
-void drawQuad()
+#define SCREEN Screen::Instance()
+#define INPUT Input::Instance()
+
+void drawQuad(float x, float y)
 {
 	glBegin(GL_QUADS);
 
 	// top left
 	glColor3f(1, 0, 0);
-	glVertex3f(-0.5f, 0.5f, 0.0f);
+	glVertex3f(x - 0.5f, y + 0.5f, 0.0f);
 
 	// top right
 	glColor3f(0, 1, 0);
-	glVertex3f(0.5f, 0.5f, 0.0f);
+	glVertex3f(x + 0.5f, y + 0.5f, 0.0f);
 
 	// bottom right
 	glColor3f(0, 0, 1);
-	glVertex3f(0.5f, -0.5f, 0.0f);
+	glVertex3f(x + 0.5f, y - 0.5f, 0.0f);
 
 	// bottom left
 	glColor3f(0, 0, 1);
-	glVertex3f(-0.5f, -0.5f, 0.0f);
+	glVertex3f(x - 0.5f, y - 0.5f, 0.0f);
 
 	glEnd();
 }
 
 int main(int arg, char* argc[])
 {
-	Screen::Instance()->Initialize();
+	SCREEN->Initialize();
+
+	float xPos = 0, yPos = 0;
 
 	while(isAppRunning)
 	{
-		Screen::Instance()->ClearScreen();
+		SCREEN->ClearScreen();
+		INPUT->Update();
 
-		if (Input::Instance()->IsKeyPressed())
-			std::cout << "Key pressed!\n";
+		isAppRunning = !INPUT->IsXClicked();
 
-		drawQuad();
+		char keyPressed = INPUT->GetKeyDown();
+		switch (keyPressed)
+		{
+			case 'w':
+				yPos += 0.01f;
+				break;
 
-		Screen::Instance()->Render();
+			case 's':
+				yPos -= 0.01f;
+				break;
+
+			case 'a':
+				xPos -= 0.01f;
+				break;
+
+			case 'd':
+				xPos += 0.01f;
+				break;
+
+			default:
+				break;
+		}
+
+		drawQuad(xPos, yPos);
+
+		SCREEN->Render();
 		
 	}
 
-	Screen::Instance()->Close();
+	SCREEN->Close();
 
 	system("pause");
 	return 0;

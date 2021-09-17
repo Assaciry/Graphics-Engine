@@ -1,10 +1,9 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include <Windows.h>
 #include <iostream>
 #include <SDL.h>
-#include <gl/GL.h>
+#include "glad.h"
 
 class Screen
 {

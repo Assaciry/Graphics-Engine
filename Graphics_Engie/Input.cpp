@@ -2,6 +2,13 @@
 
 Input::Input()
 {
+	m_keyDown = '\0';
+
+	m_isXClicked            = false;
+	m_isKeyPressed          = false;
+	m_isLeftButtonClicked   = false;
+	m_isMiddleButtonClicked = false;
+	m_isRightButtonClicked  = false;
 }
 
 Input* Input::Instance()
@@ -17,7 +24,7 @@ bool Input::IsXClicked() const
 
 bool Input::IsKeyPressed() const
 {
-	return m_keyDown;
+	return m_isKeyPressed;
 }
 
 char Input::GetKeyUp() const
@@ -27,7 +34,7 @@ char Input::GetKeyUp() const
 
 char Input::GetKeyDown() const
 {
-	return m_keyUp;
+	return m_keyDown;
 }
 
 bool Input::IsMouseLeftClicked() const
@@ -69,13 +76,81 @@ void Input::Update()
 {
 	SDL_Event events;
 
+	m_mouseMotionX = 0;
+	m_mouseMotionY = 0;
+	m_mousePositionX = 0;
+	m_mousePositionY = 0;
+
 	while(SDL_PollEvent(&events))
 	{
-		if(events.type == SDL_KEYDOWN)
+		switch (events.type)
 		{
-			m_keyDown = true;
-			std::cout << "A key was pressed\n";
+			case SDL_QUIT:
+				m_isXClicked = true;
+			break;
+
+			case SDL_KEYDOWN:
+				m_isKeyPressed = true;
+				m_keyDown = events.key.keysym.sym;
+			break;
+
+			case SDL_KEYUP:
+				m_isKeyPressed = false;
+				m_keyUp = events.key.keysym.sym;
+			break;
+			
+			case SDL_MOUSEBUTTONDOWN:
+				switch (events.button.button)
+				{
+					case SDL_BUTTON_LEFT:
+						m_isLeftButtonClicked = true;
+						break;
+
+					case SDL_BUTTON_RIGHT:
+						m_isRightButtonClicked = true;
+						break;
+
+					case SDL_BUTTON_MIDDLE:
+						m_isMiddleButtonClicked = true;
+						break;
+
+					default:
+						break;
+				}
+			break;
+
+			case SDL_MOUSEBUTTONUP:
+				switch (events.button.button)
+				{
+				case SDL_BUTTON_LEFT:
+					m_isLeftButtonClicked = false;
+					break;
+
+				case SDL_BUTTON_RIGHT:
+					m_isRightButtonClicked = false;
+					break;
+
+				case SDL_BUTTON_MIDDLE:
+					m_isMiddleButtonClicked = false;
+					break;
+
+				default:
+					break;
+				}
+			break;
+
+			case SDL_MOUSEMOTION:
+				m_mouseMotionX = events.motion.xrel;
+				m_mouseMotionY = events.motion.yrel;
+
+				m_mousePositionX = events.motion.x;
+				m_mousePositionY = events.motion.y;
+			break;
+
+			default:
+				break;
 		}
+
 	}
 
 
