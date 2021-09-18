@@ -1,10 +1,12 @@
 #include "Screen.h"
 #include "Input.h"
+#include "Shader.h"
 
 bool isAppRunning = true;
 
 #define SCREEN Screen::Instance()
 #define INPUT Input::Instance()
+#define SHADER Shader::Instance()
 
 void drawQuad(float x, float y)
 {
@@ -33,8 +35,45 @@ int main(int arg, char* argc[])
 {
 	SCREEN->Initialize();
 
+	if(!SHADER->CreateProgram())
+	{
+		return 0;
+	}
+
+	if(!SHADER->CreateShaders())
+	{
+		return 0;
+	}
+
+	if(!SHADER->CompileShaders("Shaders/Main.vert", Shader::ShaderType::VERTEXSHADER))
+	{
+		// ...
+	}
+
+	if(!SHADER->CompileShaders("Shaders/Main.frag", Shader::ShaderType::FRAGMENTSHADER))
+	{
+		// ...
+	}
+
+	SHADER->AttachShaders();
+
+	if(!SHADER->LinkProgram())
+	{
+		// ...
+	}
+
 	float xPos = 0, yPos = 0;
 
+	GLint ID = glGetUniformLocation(shaderProgramID, "time");
+
+	if(ID == -1)
+	{
+		// Warning
+	}
+
+	glUniform1f(ID, 2.4f);
+
+	// ===================================================================
 	while(isAppRunning)
 	{
 		SCREEN->ClearScreen();
@@ -70,6 +109,10 @@ int main(int arg, char* argc[])
 		SCREEN->Render();
 		
 	}
+
+	SHADER->DetachShaders();
+	SHADER->DestroyShaders();
+	SHADER->DestroyProgram();
 
 	SCREEN->Close();
 

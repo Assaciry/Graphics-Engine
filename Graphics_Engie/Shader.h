@@ -9,13 +9,15 @@
 class Shader
 {
 public:
+	enum class ShaderType {VERTEXSHADER, FRAGMENTSHADER };
+public:
 	static Shader* Instance();
 
 public:
 	bool CreateProgram();
 	bool CreateShaders();
 
-	bool CompileShaders(const std::string& filename);
+	bool CompileShaders(const std::string& filename, ShaderType shaderType);
 	void AttachShaders();
 	bool LinkProgram();
 
