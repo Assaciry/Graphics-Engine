@@ -1,8 +1,12 @@
 #version 460
 
-uniform float time;
+in vec3 vertexIn;
+in vec3 colorIn;
+out vec3 colorOut;
 
 void main()
 {
-	// TODO
+	colorOut = colorIn;
+	gl_Position = vec4(vertexIn, 1.0);
 }
+

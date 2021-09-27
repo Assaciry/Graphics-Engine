@@ -1,5 +1,6 @@
 #include "Screen.h"
 #include "Input.h"
+#include "Quad.h"
 #include "Shader.h"
 
 bool isAppRunning = true;
@@ -62,16 +63,9 @@ int main(int arg, char* argc[])
 		// ...
 	}
 
+	Quad quad;
+
 	float xPos = 0, yPos = 0;
-
-	GLint ID = glGetUniformLocation(shaderProgramID, "time");
-
-	if(ID == -1)
-	{
-		// Warning
-	}
-
-	glUniform1f(ID, 2.4f);
 
 	// ===================================================================
 	while(isAppRunning)
@@ -104,11 +98,11 @@ int main(int arg, char* argc[])
 				break;
 		}
 
-		drawQuad(xPos, yPos);
-
+		quad.Render();
 		SCREEN->Render();
 		
 	}
+	// =======================================================
 
 	SHADER->DetachShaders();
 	SHADER->DestroyShaders();

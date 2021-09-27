@@ -1,11 +1,10 @@
 #version 460
 
-uniform float time;
-uniform bool isLit;
+in vec3 colorOut; // pass through from the vertex shader
+out vec4 fragColor;
 
 void main()
 {
-	
-	// TODO
+	fragColor = vec4(colorOut, 1.0);
 	
 }
